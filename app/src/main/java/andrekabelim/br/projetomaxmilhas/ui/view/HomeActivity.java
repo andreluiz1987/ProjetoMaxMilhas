@@ -1,5 +1,6 @@
 package andrekabelim.br.projetomaxmilhas.ui.view;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -13,8 +14,13 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import andrekabelim.br.projetomaxmilhas.R;
@@ -27,6 +33,7 @@ import andrekabelim.br.projetomaxmilhas.ui.models.ResponseData;
 import andrekabelim.br.projetomaxmilhas.ui.support.http.GoibiboAPI;
 import andrekabelim.br.projetomaxmilhas.ui.support.http.RetrofitConfig;
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -37,13 +44,18 @@ public class HomeActivity extends AppCompatActivity {
     @BindView(R.id.btn_find_tickets)
     Button btnSearch;
 
+    @BindView(R.id.edt_date_from)
+    EditText txtDateFrom;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        ButterKnife.bind(this);
 //        AppCompatAutoCompleteTextView autoTextViewCustom = findViewById(R.id.acIATA);
 //
 //        AirportAdapter airportAdapter = new AirportAdapter(this, R.layout.autocomplete_item, CodeIATA.getIATACodes());
@@ -51,15 +63,16 @@ public class HomeActivity extends AppCompatActivity {
 //        autoTextViewCustom.setThreshold(1);
 //        autoTextViewCustom.setAdapter(airportAdapter);
 
-        Button btnSearch = findViewById(R.id.btn_find_tickets);
-        btnSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+//        Button btnSearch = findViewById(R.id.btn_find_tickets);
+////        btnSearch.setOnClickListener(new View.OnClickListener() {
+////            @Override
+////            public void onClick(View view) {
+////
+////                Intent intent = new Intent(getApplicationContext(), FligthActivity.class);
+////                startActivity(intent);
+////            }
+////        });
 
-                Intent intent = new Intent(getApplicationContext(), FligthActivity.class);
-                startActivity(intent);
-            }
-        });
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,7 +82,7 @@ public class HomeActivity extends AppCompatActivity {
 
                 Map<String, String> filters = new HashMap<>();
                 filters.put(AppConfig.Goibibo.PARAM_APP_ID, AppConfig.Goibibo.APP_ID);
-                filters.put(AppConfig.Goibibo.PARAM_APP_ID,AppConfig.Goibibo.KEY);
+                filters.put(AppConfig.Goibibo.PARAM_APP_ID, AppConfig.Goibibo.KEY);
                 filters.put(AppConfig.Goibibo.PARAM_FORMAT, AppConfig.Goibibo.FORMAT_JSON);
                 filters.put(AppConfig.Goibibo.PARAM_SOURCE, "CNF");
                 filters.put(AppConfig.Goibibo.PARAM_DESTINATION, "VIX");
@@ -110,8 +123,27 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     @OnClick(R.id.btn_find_tickets)
-    public void btnSearchClicked(View view){
+    public void btnSearchClicked(View view) {
         Intent intent = new Intent(this, FligthActivity.class);
         startActivity(intent);
     }
+
+    @OnClick(R.id.edt_date_from)
+    public void edtDateOnWardClicked() {
+
+        Calendar newCalendar = Calendar.getInstance();
+
+
+        final SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+        DatePickerDialog datepicker = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                Calendar newDate = Calendar.getInstance();
+                newDate.set(year, monthOfYear, dayOfMonth);
+                txtDateFrom.setText(dateFormatter.format(newDate.getTime()));
+            }
+
+        },newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
+    }
+
 }
