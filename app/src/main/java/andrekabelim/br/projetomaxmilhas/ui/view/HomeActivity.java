@@ -1,5 +1,6 @@
 package andrekabelim.br.projetomaxmilhas.ui.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -26,6 +27,7 @@ import andrekabelim.br.projetomaxmilhas.ui.models.ResponseData;
 import andrekabelim.br.projetomaxmilhas.ui.support.http.GoibiboAPI;
 import andrekabelim.br.projetomaxmilhas.ui.support.http.RetrofitConfig;
 import butterknife.BindView;
+import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -39,7 +41,7 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
 //        AppCompatAutoCompleteTextView autoTextViewCustom = findViewById(R.id.acIATA);
@@ -49,6 +51,15 @@ public class HomeActivity extends AppCompatActivity {
 //        autoTextViewCustom.setThreshold(1);
 //        autoTextViewCustom.setAdapter(airportAdapter);
 
+        Button btnSearch = findViewById(R.id.btn_find_tickets);
+        btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(getApplicationContext(), FligthActivity.class);
+                startActivity(intent);
+            }
+        });
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,5 +107,11 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         return super.onOptionsItemSelected(item);
+    }
+
+    @OnClick(R.id.btn_find_tickets)
+    public void btnSearchClicked(View view){
+        Intent intent = new Intent(this, FligthActivity.class);
+        startActivity(intent);
     }
 }
