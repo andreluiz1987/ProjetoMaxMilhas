@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">ProjetoMaxMilhas</string>
+    <string name="action_settings">Settings</string>
+    <string name="quantity_passenger">Quantidade de passageiros</string>
+    <string name="source_iata">IATA Origem</string>
+    <string name="destination_iata">IATA Destino</string>
+    <string name="find_tickets">Pesquisar passagens</string>
+    <string name="date_from">Data de ida</string>
+    <string name="date_to">Data de volta</string>
+</resources>

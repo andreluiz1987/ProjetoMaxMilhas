@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#EDF3F8"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".ui.view.HomeActivity"
+    tools:layout_editor_absoluteY="81dp"
+    tools:showIn="@layout/activity_home">
+
+    <EditText
+        android:id="@+id/edt_source_iata"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/edittext_shadow"
+        android:drawableRight="@drawable/ic_marker"
+        android:elevation="2dp"
+        android:hint="@string/source_iata"
+        android:imeOptions="actionDone"
+        android:inputType="number"
+        android:padding="15dp"
+        android:translationZ="2dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/edt_destination_iata"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/edittext_shadow"
+        android:drawableRight="@drawable/ic_marker"
+        android:elevation="2dp"
+        android:hint="@string/destination_iata"
+        android:imeOptions="actionDone"
+        android:inputType="number"
+        android:padding="15dp"
+        android:translationZ="2dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edt_source_iata" />
+
+    <LinearLayout
+        android:id="@+id/pnl_calendar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edt_destination_iata">
+
+        <EditText
+            android:id="@+id/edt_date_from"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/edittext_shadow"
+            android:drawableRight="@drawable/ic_date"
+            android:elevation="2dp"
+            android:hint="@string/date_from"
+            android:imeOptions="actionDone"
+            android:inputType="number"
+            android:padding="15dp"
+            android:translationZ="2dp" />
+
+        <EditText
+            android:id="@+id/edt_date_to"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/edittext_shadow"
+            android:drawableRight="@drawable/ic_date"
+            android:hint="@string/date_to"
+            android:imeOptions="actionDone"
+            android:inputType="number"
+            android:padding="15dp"
+            android:translationZ="2dp" />
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/edt_adults"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/edittext_shadow"
+        android:drawableRight="@drawable/ic_people"
+        android:elevation="2dp"
+        android:hint="@string/quantity_passenger"
+        android:imeOptions="actionDone"
+        android:inputType="number"
+        android:padding="15dp"
+        android:translationZ="2dp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_find_tickets"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pnl_calendar" />
+
+    <Button
+        android:id="@+id/btn_find_tickets"
+        style="@style/StyleButtonSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:elevation="2dp"
+        android:translationZ="2dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="300dp" />
+
+</android.support.constraint.ConstraintLayout>
