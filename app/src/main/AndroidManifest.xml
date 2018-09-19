@@ -22,7 +22,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.view.FligthActivity" android:label="Passagens" />
-        <activity android:name="ui.view.AirportActivity" android:label="Aeroportos"></activity>
+        <activity android:name=".ui.view.AirportActivity" android:label="Aeroportos" />
     </application>
 
 </manifest>
