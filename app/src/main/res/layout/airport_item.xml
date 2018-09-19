@@ -18,6 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:padding="10dp"
+            android:textColor="#A0A0A0"
             android:text="Name"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 

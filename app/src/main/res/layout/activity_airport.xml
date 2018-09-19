@@ -19,13 +19,14 @@
 
         <android.support.v7.widget.SearchView
             android:id="@+id/sw_airport"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/edittext_shadow"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="wrap_content"
             app:defaultQueryHint="Digite o nome do aeroporto..."></android.support.v7.widget.SearchView>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rc_airports"
-            class="android.support.v7.widget.RecyclerView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:listitem="@layout/airport_item"
