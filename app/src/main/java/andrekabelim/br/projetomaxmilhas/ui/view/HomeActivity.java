@@ -4,10 +4,7 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatAutoCompleteTextView;
-import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -15,7 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.EditText;
+import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -24,11 +21,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import andrekabelim.br.projetomaxmilhas.R;
-import andrekabelim.br.projetomaxmilhas.ui.adapters.AirportAdapter;
 import andrekabelim.br.projetomaxmilhas.ui.config.AppConfig;
-import andrekabelim.br.projetomaxmilhas.ui.helpers.CodeIATA;
-import andrekabelim.br.projetomaxmilhas.ui.models.Airport;
-import andrekabelim.br.projetomaxmilhas.ui.models.Data;
 import andrekabelim.br.projetomaxmilhas.ui.models.ResponseData;
 import andrekabelim.br.projetomaxmilhas.ui.support.http.GoibiboAPI;
 import andrekabelim.br.projetomaxmilhas.ui.support.http.RetrofitConfig;
@@ -45,7 +38,7 @@ public class HomeActivity extends AppCompatActivity {
     Button btnSearch;
 
     @BindView(R.id.edt_date_from)
-    EditText txtDateFrom;
+    TextView txtDateFrom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,22 +121,37 @@ public class HomeActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    @OnClick(R.id.edt_source_iata)
+    public void txtSourceIATAClicked(View view) {
+        Intent intent = new Intent(this, AirportActivity.class);
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.edt_destination_iata)
+    public void txtDestinationIATAClicked(View view) {
+        Intent intent = new Intent(this, AirportActivity.class);
+        startActivity(intent);
+    }
+
     @OnClick(R.id.edt_date_from)
     public void edtDateOnWardClicked() {
 
-        Calendar newCalendar = Calendar.getInstance();
+        DatePickerDialog mDate = new DatePickerDialog(HomeActivity.this, date, 2016, 2, 24);
+        mDate.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+        mDate.show();
+    }
 
+    final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
 
         final SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-        DatePickerDialog datepicker = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+            view.setMinDate(System.currentTimeMillis() - 1000);
+            Calendar newDate = Calendar.getInstance();
+            newDate.set(year, monthOfYear, dayOfMonth);
+            txtDateFrom.setText(dateFormatter.format(newDate.getTime()));
+        }
+    };
 
-            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                Calendar newDate = Calendar.getInstance();
-                newDate.set(year, monthOfYear, dayOfMonth);
-                txtDateFrom.setText(dateFormatter.format(newDate.getTime()));
-            }
-
-        },newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
-    }
 
 }
