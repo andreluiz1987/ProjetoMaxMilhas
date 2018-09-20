@@ -7,4 +7,5 @@
     <string name="find_tickets">Pesquisar passagens</string>
     <string name="date_from">Data de ida</string>
     <string name="date_to">Data de volta</string>
+    <string name="message_find_tickets">Pesquisando passagens...</string>
 </resources>

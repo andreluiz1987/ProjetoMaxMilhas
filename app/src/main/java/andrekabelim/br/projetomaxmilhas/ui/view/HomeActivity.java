@@ -12,7 +12,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -22,7 +25,11 @@ import java.util.Map;
 
 import andrekabelim.br.projetomaxmilhas.R;
 import andrekabelim.br.projetomaxmilhas.ui.config.AppConfig;
+import andrekabelim.br.projetomaxmilhas.ui.config.IntentsConfig;
+import andrekabelim.br.projetomaxmilhas.ui.models.Airport;
 import andrekabelim.br.projetomaxmilhas.ui.models.ResponseData;
+import andrekabelim.br.projetomaxmilhas.ui.presenter.HomePresenter;
+import andrekabelim.br.projetomaxmilhas.ui.presenter.HomePresenterImpl;
 import andrekabelim.br.projetomaxmilhas.ui.support.http.GoibiboAPI;
 import andrekabelim.br.projetomaxmilhas.ui.support.http.RetrofitConfig;
 import butterknife.BindView;
@@ -32,13 +39,30 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity implements HomeView {
 
     @BindView(R.id.btn_find_tickets)
     Button btnSearch;
 
     @BindView(R.id.edt_date_from)
     TextView txtDateFrom;
+
+    @BindView(R.id.edt_date_to)
+    TextView txtDateReturn;
+
+    @BindView(R.id.edt_adults)
+    EditText edtAdults;
+
+    @BindView(R.id.edt_source_iata)
+    TextView txtSourceIATA;
+
+    @BindView(R.id.edt_destination_iata)
+    TextView txtDestinationIATA;
+
+    @BindView(R.id.pnl_loading_search)
+    LinearLayout pnlLoading;
+
+    HomePresenter homePresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,60 +73,18 @@ public class HomeActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         ButterKnife.bind(this);
-//        AppCompatAutoCompleteTextView autoTextViewCustom = findViewById(R.id.acIATA);
-//
-//        AirportAdapter airportAdapter = new AirportAdapter(this, R.layout.autocomplete_item, CodeIATA.getIATACodes());
-//
-//        autoTextViewCustom.setThreshold(1);
-//        autoTextViewCustom.setAdapter(airportAdapter);
 
-//        Button btnSearch = findViewById(R.id.btn_find_tickets);
-////        btnSearch.setOnClickListener(new View.OnClickListener() {
-////            @Override
-////            public void onClick(View view) {
-////
-////                Intent intent = new Intent(getApplicationContext(), FligthActivity.class);
-////                startActivity(intent);
-////            }
-////        });
+        homePresenter = new HomePresenterImpl(this);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        getIntents();
+    }
 
-                GoibiboAPI goibiboAPI = RetrofitConfig.getRetrofit().create(GoibiboAPI.class);
-
-                Map<String, String> filters = new HashMap<>();
-                filters.put(AppConfig.Goibibo.PARAM_APP_ID, AppConfig.Goibibo.APP_ID);
-                filters.put(AppConfig.Goibibo.PARAM_APP_ID, AppConfig.Goibibo.KEY);
-                filters.put(AppConfig.Goibibo.PARAM_FORMAT, AppConfig.Goibibo.FORMAT_JSON);
-                filters.put(AppConfig.Goibibo.PARAM_SOURCE, "CNF");
-                filters.put(AppConfig.Goibibo.PARAM_DESTINATION, "VIX");
-                filters.put(AppConfig.Goibibo.PARAM_DATEOFDEPARTURE, "20180920");
-                filters.put(AppConfig.Goibibo.PARAM_DATEOFARRIVAL, "20181019");
-                filters.put(AppConfig.Goibibo.PARAM_ADULTS, "1");
-                filters.put(AppConfig.Goibibo.PARAM_SEATING_CLASS, AppConfig.Goibibo.DEFAULT_SEATING_CLASS_VALUE);
-                filters.put(AppConfig.Goibibo.PARAM_CHILDREN, AppConfig.Goibibo.DEFAULT_CHILDREN_VALUE);
-                filters.put(AppConfig.Goibibo.PARAM_INFANTS, AppConfig.Goibibo.DEFAULT_INFANTS_VALUE);
-                filters.put(AppConfig.Goibibo.PARAM_COUNTER, AppConfig.Goibibo.DEFAULT_COUNTER_VALUE);
-
-                Call<ResponseData> call = goibiboAPI.getFlights(filters);
-
-                call.enqueue(new Callback<ResponseData>() {
-                    @Override
-                    public void onResponse(Call<ResponseData> call, Response<ResponseData> response) {
-                        Log.d("HOME", response.body().toString());
-                        ResponseData data = response.body();
-                    }
-
-                    @Override
-                    public void onFailure(Call<ResponseData> call, Throwable t) {
-                        Log.d("HOME", t.getMessage());
-                    }
-                });
-            }
-        });
+    private void getIntents() {
+        Intent intent = getIntent();
+        if (intent.getBundleExtra(IntentsConfig.AIRPORT_AITA) != null) {
+            Airport airport = (Airport) intent.getSerializableExtra(IntentsConfig.AIRPORT_AITA);
+            txtSourceIATA.setText(airport.getCode());
+        }
     }
 
     @Override
@@ -117,8 +99,12 @@ public class HomeActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_find_tickets)
     public void btnSearchClicked(View view) {
-        Intent intent = new Intent(this, FligthActivity.class);
-        startActivity(intent);
+
+        homePresenter.onSearchClick(txtSourceIATA.getText().toString(),
+                txtDestinationIATA.getText().toString(),
+                txtDateFrom.getText().toString(),
+                txtDateReturn.getText().toString(),
+                edtAdults.getText().toString());
     }
 
     @OnClick(R.id.edt_source_iata)
@@ -134,24 +120,53 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     @OnClick(R.id.edt_date_from)
-    public void edtDateOnWardClicked() {
-
-        DatePickerDialog mDate = new DatePickerDialog(HomeActivity.this, date, 2016, 2, 24);
-        mDate.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
-        mDate.show();
+    public void edtDateOnWardClicked(View view) {
+        showDatePicker((TextView) view);
     }
 
-    final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+    @OnClick(R.id.edt_date_to)
+    public void edtDateReturn(View view) {
+        showDatePicker((TextView) view);
+    }
 
-        final SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-        @Override
-        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-            view.setMinDate(System.currentTimeMillis() - 1000);
-            Calendar newDate = Calendar.getInstance();
-            newDate.set(year, monthOfYear, dayOfMonth);
-            txtDateFrom.setText(dateFormatter.format(newDate.getTime()));
-        }
-    };
+    private void showDatePicker(final TextView editText) {
 
+        Calendar calendar = Calendar.getInstance();
 
+        DatePickerDialog datePickerDialog = new DatePickerDialog(HomeActivity.this,
+                new DatePickerDialog.OnDateSetListener() {
+                    SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                        Calendar newDate = Calendar.getInstance();
+                        newDate.set(year, monthOfYear, dayOfMonth);
+                        editText.setText(dateFormatter.format(newDate.getTime()));
+                    }
+                }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+
+        datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+        datePickerDialog.show();
+    }
+
+    @Override
+    public void showDialog() {
+        pnlLoading.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideDialog() {
+        pnlLoading.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void navigateToFligthPage() {
+        Intent intent = new Intent(this, FligthActivity.class);
+        //startActivity(intent);
+    }
+
+    @Override
+    public void showAlert(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    }
 }
