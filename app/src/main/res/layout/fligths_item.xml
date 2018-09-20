@@ -388,6 +388,7 @@
                 android:background="@drawable/line_dot_bg"></LinearLayout>
 
             <Button
+                android:id="@+id/btn_buy_ticket"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"

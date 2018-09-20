@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.RelativeLayout;
 
 import andrekabelim.br.projetomaxmilhas.R;
 import andrekabelim.br.projetomaxmilhas.ui.adapters.AirportAdapter;
@@ -82,10 +83,11 @@ public class AirportActivity extends AppCompatActivity {
     AirportAdapter.OnItemClickListener clickListener = new AirportAdapter.OnItemClickListener() {
         @Override
         public void onItemClick(View view, int position) {
-            Airport airport = (Airport) view.getTag();
+
+            Airport airport = (Airport) ((RelativeLayout)view).getChildAt(0).getTag();
 
             Intent intent = new Intent(AirportActivity.this, HomeActivity.class);
-            intent.putExtra(IntentsConfig.AIRPORT_AITA, airport);
+            intent.putExtra(IntentsConfig.AIRPORT_AITA_KEY, airport);
             startActivity(intent);
             finish();
         }

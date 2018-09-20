@@ -3,6 +3,7 @@ package andrekabelim.br.projetomaxmilhas.ui.view;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -77,14 +78,30 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
         homePresenter = new HomePresenterImpl(this);
 
         getIntents();
+
+        restoreData(savedInstanceState);
     }
 
     private void getIntents() {
         Intent intent = getIntent();
-        if (intent.getBundleExtra(IntentsConfig.AIRPORT_AITA) != null) {
-            Airport airport = (Airport) intent.getSerializableExtra(IntentsConfig.AIRPORT_AITA);
-            txtSourceIATA.setText(airport.getCode());
+//        if (intent.getBundleExtra(IntentsConfig.AIRPORT_AITA) != null) {
+//            Airport airport = (Airport) intent.getSerializableExtra(IntentsConfig.AIRPORT_AITA);
+//            txtSourceIATA.setText(airport.getCode());
+//        }
+    }
+
+    private void restoreData(Bundle savedInstanceState){
+        if (savedInstanceState != null) {
+
+            // Restore other saved values...
+            //final String nameValue = savedInstanceState.getString(NAME, "");
+            //nameEdit.setText(nameValue);
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
     }
 
     @Override

@@ -24,9 +24,45 @@ public class HomeActivityTest {
             mActivityRule = new ActivityTestRule<>(HomeActivity.class, false, true);
 
     @Test
-    public void ExecutarFiltro(){
+    public void executarFiltro(){
 
         onView(withId(R.id.edt_source_iata)).perform(typeText("ANDRE"), closeSoftKeyboard());
+
+        onView(withId(R.id.btn_find_tickets)).perform(click());
+    }
+
+    @Test
+    public void validarDados(){
+
+        onView(withId(R.id.edt_source_iata)).perform(typeText(""), closeSoftKeyboard());
+
+        onView(withId(R.id.btn_find_tickets)).perform(click());
+
+        onView(withId(R.id.edt_source_iata)).perform(typeText("Aeroporto Confins"), closeSoftKeyboard());
+
+        onView(withId(R.id.btn_find_tickets)).perform(click());
+
+        onView(withId(R.id.edt_destination_iata)).perform(typeText(""), closeSoftKeyboard());
+
+        onView(withId(R.id.btn_find_tickets)).perform(click());
+
+        onView(withId(R.id.edt_destination_iata)).perform(typeText("Aeroporto Confins"), closeSoftKeyboard());
+
+        onView(withId(R.id.btn_find_tickets)).perform(click());
+
+        onView(withId(R.id.edt_date_from)).perform(typeText(""), closeSoftKeyboard());
+
+        onView(withId(R.id.btn_find_tickets)).perform(click());
+
+        onView(withId(R.id.edt_date_from)).perform(typeText("20/09/2018"), closeSoftKeyboard());
+
+        onView(withId(R.id.btn_find_tickets)).perform(click());
+
+        onView(withId(R.id.edt_date_to)).perform(typeText("19/09/2018"), closeSoftKeyboard());
+
+        onView(withId(R.id.btn_find_tickets)).perform(click());
+
+        onView(withId(R.id.edt_date_to)).perform(typeText(""), closeSoftKeyboard());
 
         onView(withId(R.id.btn_find_tickets)).perform(click());
     }
