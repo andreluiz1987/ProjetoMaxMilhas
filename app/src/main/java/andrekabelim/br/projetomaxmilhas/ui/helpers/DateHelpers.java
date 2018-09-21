@@ -23,4 +23,9 @@ public class DateHelpers {
         }
         return strDate;
     }
+
+    public static String formatDateToGiobibo(String date) {
+        String[] arrDate = date.split("-");
+        return arrDate[2] + arrDate[1] +arrDate[0];
+    }
 }

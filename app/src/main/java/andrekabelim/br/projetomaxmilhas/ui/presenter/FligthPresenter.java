@@ -1,5 +1,5 @@
 package andrekabelim.br.projetomaxmilhas.ui.presenter;
 
 public interface FligthPresenter {
-    void loadFligths();
+    void loadFligths(int size);
 }

@@ -8,4 +8,7 @@
     <string name="date_from">Data de ida</string>
     <string name="date_to">Data de volta</string>
     <string name="message_find_tickets">Pesquisando passagens...</string>
+    <string name="message_connectivity_not_found">Falha ao realizar a pesquisa. Por favor verifique sua conexão com a Internet.</string>
+
+    <string name="buy_ticket">Comprar R$[COST]</string>
 </resources>

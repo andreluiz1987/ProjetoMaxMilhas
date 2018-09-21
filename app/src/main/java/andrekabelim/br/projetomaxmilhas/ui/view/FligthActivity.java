@@ -15,14 +15,17 @@ import andrekabelim.br.projetomaxmilhas.ui.config.IntentsConfig;
 import andrekabelim.br.projetomaxmilhas.ui.helpers.CodeIATA;
 import andrekabelim.br.projetomaxmilhas.ui.models.Airport;
 import andrekabelim.br.projetomaxmilhas.ui.models.Data;
+import andrekabelim.br.projetomaxmilhas.ui.presenter.FligthPresenter;
+import andrekabelim.br.projetomaxmilhas.ui.presenter.FligthPresenterImpl;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class FligthActivity extends AppCompatActivity {
-
+public class FligthActivity extends AppCompatActivity implements FligthView {
 
     @BindView(R.id.rvw_fligths)
     RecyclerView recyclerView;
+
+    FligthPresenter fligthPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,18 +35,22 @@ public class FligthActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         ButterKnife.bind(this);
+
+        fligthPresenter = new FligthPresenterImpl(this);
+
+        loadTickets();
     }
 
     private void loadTickets(){
 
         Intent intent = getIntent();
 
-        Data dataFlight = intent.getParcelableExtra(IntentsConfig.DATA_FLIGTH_KEY);
-        
+        Data dataFlight = intent.getParcelableExtra(IntentsConfig.DATA_TICKETS_KEY);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-//        TicketsAdapter adapter = new TicketsAdapter();
-//        recyclerView.setAdapter(adapter);
+        TicketsAdapter adapter = new TicketsAdapter(this, dataFlight);
+        recyclerView.setAdapter(adapter);
     }
 
     @Override
@@ -55,5 +62,10 @@ public class FligthActivity extends AppCompatActivity {
         } else {
             return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void loadFligths() {
+
     }
 }

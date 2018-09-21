@@ -19,6 +19,7 @@ import andrekabelim.br.projetomaxmilhas.ui.adapters.AirportAdapter;
 import andrekabelim.br.projetomaxmilhas.ui.config.IntentsConfig;
 import andrekabelim.br.projetomaxmilhas.ui.helpers.CodeIATA;
 import andrekabelim.br.projetomaxmilhas.ui.models.Airport;
+import andrekabelim.br.projetomaxmilhas.ui.models.ConstantsFligth;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -29,6 +30,8 @@ public class AirportActivity extends AppCompatActivity {
 
     @BindView(R.id.rc_airports)
     RecyclerView rcwAirports;
+
+    private String IATAFlag = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +45,7 @@ public class AirportActivity extends AppCompatActivity {
         rcwAirports.setLayoutManager(new LinearLayoutManager(this));
         rcwAirports.setItemAnimator(new DefaultItemAnimator());
 
-        final AirportAdapter adapter = new AirportAdapter( CodeIATA.getListIATA());
+        final AirportAdapter adapter = new AirportAdapter(CodeIATA.getListIATA());
         adapter.setItemClickListener(clickListener);
 
         rcwAirports.setAdapter(adapter);
@@ -60,7 +63,15 @@ public class AirportActivity extends AppCompatActivity {
             }
         });
 
+        getIntentData();
+
         forceShowKeyboard();
+    }
+
+    private void getIntentData(){
+        if(getIntent().getStringExtra(ConstantsFligth.IATA_FLAG_KEY) != null){
+            IATAFlag = getIntent().getStringExtra(ConstantsFligth.IATA_FLAG_KEY);
+        }
     }
 
     @Override
@@ -74,7 +85,7 @@ public class AirportActivity extends AppCompatActivity {
         }
     }
 
-    private void forceShowKeyboard(){
+    private void forceShowKeyboard() {
         filterAirport.requestFocus();
         InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.showSoftInput(filterAirport, InputMethodManager.SHOW_FORCED);
@@ -84,10 +95,13 @@ public class AirportActivity extends AppCompatActivity {
         @Override
         public void onItemClick(View view, int position) {
 
-            Airport airport = (Airport) ((RelativeLayout)view).getChildAt(0).getTag();
+            Airport airport = (Airport) ((RelativeLayout) view).getChildAt(0).getTag();
 
             Intent intent = new Intent(AirportActivity.this, HomeActivity.class);
+
+            intent.putExtras(getIntent().getExtras());
             intent.putExtra(IntentsConfig.AIRPORT_AITA_KEY, airport);
+            intent.putExtra(ConstantsFligth.IATA_FLAG_KEY, IATAFlag);
             startActivity(intent);
             finish();
         }

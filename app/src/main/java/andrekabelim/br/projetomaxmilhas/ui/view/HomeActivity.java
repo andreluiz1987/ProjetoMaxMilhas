@@ -27,7 +27,10 @@ import java.util.Map;
 import andrekabelim.br.projetomaxmilhas.R;
 import andrekabelim.br.projetomaxmilhas.ui.config.AppConfig;
 import andrekabelim.br.projetomaxmilhas.ui.config.IntentsConfig;
+import andrekabelim.br.projetomaxmilhas.ui.helpers.ConnectivityHelpers;
 import andrekabelim.br.projetomaxmilhas.ui.models.Airport;
+import andrekabelim.br.projetomaxmilhas.ui.models.ConstantsFligth;
+import andrekabelim.br.projetomaxmilhas.ui.models.Data;
 import andrekabelim.br.projetomaxmilhas.ui.models.ResponseData;
 import andrekabelim.br.projetomaxmilhas.ui.presenter.HomePresenter;
 import andrekabelim.br.projetomaxmilhas.ui.presenter.HomePresenterImpl;
@@ -78,30 +81,32 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
         homePresenter = new HomePresenterImpl(this);
 
         getIntents();
-
-        restoreData(savedInstanceState);
     }
 
     private void getIntents() {
+
         Intent intent = getIntent();
-//        if (intent.getBundleExtra(IntentsConfig.AIRPORT_AITA) != null) {
-//            Airport airport = (Airport) intent.getSerializableExtra(IntentsConfig.AIRPORT_AITA);
-//            txtSourceIATA.setText(airport.getCode());
-//        }
-    }
 
-    private void restoreData(Bundle savedInstanceState){
-        if (savedInstanceState != null) {
+        if (intent.getExtras() != null) {
 
-            // Restore other saved values...
-            //final String nameValue = savedInstanceState.getString(NAME, "");
-            //nameEdit.setText(nameValue);
+            Airport airport = intent.getExtras().getParcelable(IntentsConfig.AIRPORT_AITA_KEY);
+
+            if (intent.getStringExtra(ConstantsFligth.IATA_FLAG_KEY).equals(ConstantsFligth.IATA_ORIGIN)) {
+                txtSourceIATA.setText(airport.getName());
+                txtSourceIATA.setTag(airport.getCode());
+                txtDestinationIATA.setText(intent.getStringExtra(IntentsConfig.AITA_DEST_KEY));
+                txtDestinationIATA.setTag(intent.getStringExtra(IntentsConfig.CODE_AITA_DEST_KEY));
+            } else {
+                txtDestinationIATA.setText(airport.getName());
+                txtDestinationIATA.setTag(airport.getCode());
+                txtSourceIATA.setText(intent.getStringExtra(IntentsConfig.AITA_SOURCE_KEY));
+                txtSourceIATA.setTag(intent.getStringExtra(IntentsConfig.CODE_AITA_SOURCE_KEY));
+            }
+
+            txtDateFrom.setText(intent.getStringExtra(IntentsConfig.DATA_FROM_FLIGTH_KEY));
+            txtDateReturn.setText(intent.getStringExtra(IntentsConfig.DATA_TO_FLIGTH_KEY));
+            edtAdults.setText(intent.getStringExtra(IntentsConfig.NUMBER_ADULT_KEY));
         }
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
     }
 
     @Override
@@ -117,23 +122,44 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
     @OnClick(R.id.btn_find_tickets)
     public void btnSearchClicked(View view) {
 
-        homePresenter.onSearchClick(txtSourceIATA.getText().toString(),
-                txtDestinationIATA.getText().toString(),
-                txtDateFrom.getText().toString(),
-                txtDateReturn.getText().toString(),
-                edtAdults.getText().toString());
+        if (ConnectivityHelpers.hasConnection(this)) {
+            homePresenter.onSearchClick(
+                    txtSourceIATA.getTag().toString(),
+                    txtDestinationIATA.getTag().toString(),
+                    txtDateFrom.getText().toString(),
+                    txtDateReturn.getText().toString(),
+                    edtAdults.getText().toString());
+        } else {
+            showAlert(getString(R.string.message_connectivity_not_found));
+        }
     }
 
     @OnClick(R.id.edt_source_iata)
     public void txtSourceIATAClicked(View view) {
-        Intent intent = new Intent(this, AirportActivity.class);
+        Intent intent = prepareIntent();
+        intent.setClass(this, AirportActivity.class);
+        intent.putExtra(ConstantsFligth.IATA_FLAG_KEY, ConstantsFligth.IATA_ORIGIN);
         startActivity(intent);
     }
 
     @OnClick(R.id.edt_destination_iata)
     public void txtDestinationIATAClicked(View view) {
-        Intent intent = new Intent(this, AirportActivity.class);
+        Intent intent = prepareIntent();
+        intent.setClass(this, AirportActivity.class);
+        intent.putExtra(ConstantsFligth.IATA_FLAG_KEY, ConstantsFligth.IATA_DEST);
         startActivity(intent);
+    }
+
+    public Intent prepareIntent() {
+        Intent intent = new Intent();
+        intent.putExtra(IntentsConfig.AITA_SOURCE_KEY, txtSourceIATA.getText().toString());
+        intent.putExtra(IntentsConfig.CODE_AITA_SOURCE_KEY, (txtSourceIATA.getTag() == null) ? "" : txtSourceIATA.getTag().toString());
+        intent.putExtra(IntentsConfig.AITA_DEST_KEY, txtDestinationIATA.getText().toString());
+        intent.putExtra(IntentsConfig.CODE_AITA_DEST_KEY, (txtDestinationIATA.getTag()) == null ? "" : txtDestinationIATA.getTag().toString());
+        intent.putExtra(IntentsConfig.DATA_FROM_FLIGTH_KEY, txtDateFrom.getText().toString());
+        intent.putExtra(IntentsConfig.DATA_TO_FLIGTH_KEY, txtDateReturn.getText().toString());
+        intent.putExtra(IntentsConfig.NUMBER_ADULT_KEY, edtAdults.getText().toString());
+        return intent;
     }
 
     @OnClick(R.id.edt_date_from)
@@ -167,19 +193,20 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
     }
 
     @Override
-    public void showDialog() {
+    public void showLoading() {
         pnlLoading.setVisibility(View.VISIBLE);
     }
 
     @Override
-    public void hideDialog() {
+    public void hideLoading() {
         pnlLoading.setVisibility(View.INVISIBLE);
     }
 
     @Override
-    public void navigateToFligthPage() {
+    public void navigateToFligthPage(Data data) {
         Intent intent = new Intent(this, FligthActivity.class);
-        //startActivity(intent);
+        intent.putExtra(IntentsConfig.DATA_TICKETS_KEY, data);
+        startActivity(intent);
     }
 
     @Override

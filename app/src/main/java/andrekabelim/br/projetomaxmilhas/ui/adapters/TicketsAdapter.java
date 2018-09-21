@@ -1,5 +1,6 @@
 package andrekabelim.br.projetomaxmilhas.ui.adapters;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,10 +17,11 @@ import andrekabelim.br.projetomaxmilhas.ui.models.Data;
 
 public class TicketsAdapter extends RecyclerView.Adapter<TicketsAdapter.TicketsViewHolder> {
 
+    Context context;
     Data dataTicket;
 
-    public TicketsAdapter(Data dataTicket) {
-
+    public TicketsAdapter(Context context, Data dataTicket) {
+        this.context = context;
     }
 
     @NonNull
@@ -43,7 +45,20 @@ public class TicketsAdapter extends RecyclerView.Adapter<TicketsAdapter.TicketsV
         holder.txtIATALadinggOnWard.setText(dataTicket.getOnwardflights().get(position).getDestination());
         holder.txtDateFrom.setText(DateHelpers.formatDateToText(dataTicket.getOnwardflights().get(position).getDepartureTime()));
 
-        holder.btnBuy.setText(dataTicket.getOnwardflights().get(position).getFare().getTotalfare());
+        if (dataTicket.getOnwardflights().get(position).getReturnfl().size() > 0) {
+            holder.txtCompanyReturn.setText(dataTicket.getOnwardflights().get(position).getAirline());
+            holder.txtNumberFligthReturn.setText(dataTicket.getOnwardflights().get(position).getReturnfl().get(0).getFlightcode());
+            holder.txtTimeBoardingReturn.setText(dataTicket.getOnwardflights().get(position).getReturnfl().get(0).getDeptime());
+            holder.txtIATABoardingReturn.setText(dataTicket.getOnwardflights().get(position).getReturnfl().get(0).getOrigin());
+            holder.txtTotalTimeBoardingReturn.setText(dataTicket.getOnwardflights().get(position).getReturnfl().get(0).getDuration());
+            //holder.txtTypeReturnsetText(dataTicket.getOnwardflights().get(position).());
+            holder.txtTimeLadingReturn.setText(dataTicket.getOnwardflights().get(position).getReturnfl().get(0).getArrtime());
+            holder.txtIATALadinggReturn.setText(dataTicket.getOnwardflights().get(position).getReturnfl().get(0).getDestination());
+            holder.txtDateReturn.setText(DateHelpers.formatDateToText(dataTicket.getOnwardflights().get(position).getReturnfl().get(0).getDepartureTime()));
+
+        }
+        holder.btnBuy.setText(this.context.getString(R.string.buy_ticket)
+                .replace("[COST]", dataTicket.getOnwardflights().get(position).getFare().getTotalfare().toString()));
     }
 
     @Override
