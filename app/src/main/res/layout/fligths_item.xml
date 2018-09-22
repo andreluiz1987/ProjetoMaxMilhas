@@ -16,12 +16,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#ffffff"
-            android:orientation="vertical"
-            android:padding="10dp">
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -161,9 +161,9 @@
                                 android:id="@+id/txt_type_onward"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:text="VOO DIRETO"
                                 android:textColor="#879395"
-                                android:textSize="12sp"
-                                tools:text="VOO DIRETO" />
+                                android:textSize="12sp" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -204,9 +204,11 @@
                 android:background="@drawable/line_dot_bg"></LinearLayout>
 
             <LinearLayout
+                android:id="@+id/pnl_ticket_return"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -339,15 +341,15 @@
                                 android:textColor="#879395"
                                 android:textSize="12sp"
                                 android:textStyle="bold"
-                                tools:text="1H55" />
+                                tools:text="1h 50m" />
 
                             <TextView
                                 android:id="@+id/txt_type_return"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:text="VOO DIRETO"
                                 android:textColor="#879395"
-                                android:textSize="12sp"
-                                tools:text="VOO DIRETO" />
+                                android:textSize="12sp" />
                         </LinearLayout>
 
                         <LinearLayout

@@ -19,8 +19,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -31,6 +33,7 @@ import andrekabelim.br.projetomaxmilhas.ui.helpers.ConnectivityHelpers;
 import andrekabelim.br.projetomaxmilhas.ui.models.Airport;
 import andrekabelim.br.projetomaxmilhas.ui.models.ConstantsFligth;
 import andrekabelim.br.projetomaxmilhas.ui.models.Data;
+import andrekabelim.br.projetomaxmilhas.ui.models.OnWardFlight;
 import andrekabelim.br.projetomaxmilhas.ui.models.ResponseData;
 import andrekabelim.br.projetomaxmilhas.ui.presenter.HomePresenter;
 import andrekabelim.br.projetomaxmilhas.ui.presenter.HomePresenterImpl;
@@ -122,15 +125,24 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
     @OnClick(R.id.btn_find_tickets)
     public void btnSearchClicked(View view) {
 
-        if (ConnectivityHelpers.hasConnection(this)) {
-            homePresenter.onSearchClick(
-                    txtSourceIATA.getTag().toString(),
-                    txtDestinationIATA.getTag().toString(),
-                    txtDateFrom.getText().toString(),
-                    txtDateReturn.getText().toString(),
-                    edtAdults.getText().toString());
-        } else {
-            showAlert(getString(R.string.message_connectivity_not_found));
+        try {
+
+            String sourceIATA, destIATA = "";
+            if (ConnectivityHelpers.hasConnection(this)) {
+                sourceIATA = (txtSourceIATA.getTag() == null) ? "" : txtSourceIATA.getTag().toString();
+                destIATA = (txtDestinationIATA.getTag() == null) ? "" : txtDestinationIATA.getTag().toString();
+                homePresenter.onSearchClick(
+                        sourceIATA,
+                        destIATA,
+                        txtDateFrom.getText().toString(),
+                        txtDateReturn.getText().toString(),
+                        edtAdults.getText().toString());
+            } else {
+                showAlert(getString(R.string.message_connectivity_not_found));
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            showAlert("Não foi possível realizar a pesquisa.");
         }
     }
 
@@ -203,9 +215,9 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
     }
 
     @Override
-    public void navigateToFligthPage(Data data) {
+    public void navigateToFligthPage(ArrayList<OnWardFlight> data) {
         Intent intent = new Intent(this, FligthActivity.class);
-        intent.putExtra(IntentsConfig.DATA_TICKETS_KEY, data);
+        intent.putParcelableArrayListExtra(IntentsConfig.DATA_TICKETS_KEY, data);
         startActivity(intent);
     }
 

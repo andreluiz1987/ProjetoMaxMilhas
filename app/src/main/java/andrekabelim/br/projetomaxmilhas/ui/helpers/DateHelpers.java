@@ -1,5 +1,6 @@
 package andrekabelim.br.projetomaxmilhas.ui.helpers;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -12,11 +13,11 @@ public class DateHelpers {
 
         try {
 
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd", java.util.Locale.getDefault());
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd't'HHmm", java.util.Locale.getDefault());
             Date myDate = sdf.parse(date);
 
             sdf.applyPattern("EEE, d MMM yyyy");
-            sdf.format(myDate);
+            strDate = sdf.format(myDate);
 
         } catch (ParseException e) {
             e.printStackTrace();

@@ -9,6 +9,8 @@ import java.util.Map;
 import andrekabelim.br.projetomaxmilhas.R;
 import andrekabelim.br.projetomaxmilhas.ui.config.AppConfig;
 import andrekabelim.br.projetomaxmilhas.ui.helpers.DateHelpers;
+import andrekabelim.br.projetomaxmilhas.ui.models.Data;
+import andrekabelim.br.projetomaxmilhas.ui.models.OnWardFlight;
 import andrekabelim.br.projetomaxmilhas.ui.models.ResponseData;
 import andrekabelim.br.projetomaxmilhas.ui.support.http.GoibiboAPI;
 import andrekabelim.br.projetomaxmilhas.ui.support.http.RetrofitConfig;
@@ -26,9 +28,7 @@ public class HomePresenterImpl implements HomePresenter {
     }
 
     @Override
-    public void onSearchClick(String source, String dest, String dateFrom, String dateReturn, String numAdults) {
-
-        homeView.showLoading();
+    public void onSearchClick(String source, final String dest, String dateFrom, String dateReturn, String numAdults) {
 
         try {
 
@@ -39,14 +39,16 @@ public class HomePresenterImpl implements HomePresenter {
                 return;
             }
 
+            homeView.showLoading();
+
             dateFrom = DateHelpers.formatDateToGiobibo(dateFrom);
             dateReturn = (dateReturn.length() > 0) ? DateHelpers.formatDateToGiobibo(dateReturn) : dateReturn;
 
             GoibiboAPI goibiboAPI = RetrofitConfig.getRetrofit().create(GoibiboAPI.class);
 
-            Map<String, String> filters = new HashMap<>();
+            final Map<String, String> filters = new HashMap<>();
             filters.put(AppConfig.Goibibo.PARAM_APP_ID, AppConfig.Goibibo.APP_ID);
-            filters.put(AppConfig.Goibibo.PARAM_APP_ID, AppConfig.Goibibo.KEY);
+            filters.put(AppConfig.Goibibo.PARAM_APP_KEY, AppConfig.Goibibo.KEY);
             filters.put(AppConfig.Goibibo.PARAM_FORMAT, AppConfig.Goibibo.FORMAT_JSON);
             filters.put(AppConfig.Goibibo.PARAM_SOURCE, source);
             filters.put(AppConfig.Goibibo.PARAM_DESTINATION, dest);
@@ -71,16 +73,20 @@ public class HomePresenterImpl implements HomePresenter {
 
                     ResponseData data = response.body();
 
-                    if (data.getData().getOnwardflights().size() == 0 || data.getData().getReturnflights().size() == 0) {
+                    data.setData(prepareFligths(data, filters.get(AppConfig.Goibibo.PARAM_SOURCE), filters.get(AppConfig.Goibibo.PARAM_DESTINATION)));
+
+                    if (data.getData().getOnwardflights().size() == 0) {
                         homeView.showAlert("Não existem passagens para a pesquisa realizada.");
                     } else {
-                        homeView.navigateToFligthPage(data.getData());
+                        homeView.navigateToFligthPage(data.getData().getOnwardflights());
                     }
                 }
 
                 @Override
                 public void onFailure(Call<ResponseData> call, Throwable t) {
+                    homeView.hideLoading();
                     Log.d("HomePresenterImpl", t.getMessage());
+                    homeView.showAlert("Não foi possível completar a solicitação.");
                 }
             });
 
@@ -88,6 +94,19 @@ public class HomePresenterImpl implements HomePresenter {
             ex.printStackTrace();
             homeView.hideLoading();
         }
+    }
+
+    private Data prepareFligths(ResponseData data, String origin, String dest) {
+
+        Data result = new Data();
+
+        for (OnWardFlight item : data.getData().getOnwardflights()) {
+            if(item.getOrigin().equals(origin) && item.getDestination().equals(dest)){
+                result.getOnwardflights().add(item);
+            }
+        }
+
+        return result;
     }
 
     private String validateData(String source, String dest, String dateFrom, String dateReturn, String numAdults) {

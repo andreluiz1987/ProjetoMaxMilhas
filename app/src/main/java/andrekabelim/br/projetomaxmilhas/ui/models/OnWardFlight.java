@@ -1,13 +1,17 @@
 package andrekabelim.br.projetomaxmilhas.ui.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
 
-public class OnWardFlight {
+public class OnWardFlight implements Parcelable {
 
+    //region class
     @SerializedName("origin")
     @Expose
     private String origin;
@@ -149,6 +153,71 @@ public class OnWardFlight {
     @SerializedName("TravelTime")
     @Expose
     private String travelTime;
+
+    protected OnWardFlight(Parcel in) {
+        origin = in.readString();
+        if (in.readByte() == 0) {
+            rating = null;
+        } else {
+            rating = in.readInt();
+        }
+        departureTime = in.readString();
+        flightcode = in.readString();
+        group = in.readString();
+        farebasis = in.readString();
+        depterminal = in.readString();
+        holdflag = in.readString();
+        cINFO = in.readString();
+        deptime = in.readString();
+        codeshare = in.readString();
+        ibibopartner = in.readString();
+        duration = in.readString();
+        platingcarrier = in.readString();
+        qtype = in.readString();
+        arrterminal = in.readString();
+        flightno = in.readString();
+        destination = in.readString();
+        flHash = in.readString();
+        stops = in.readString();
+        seatsavailable = in.readString();
+        carrierid = in.readString();
+        provider = in.readString();
+        refundable = in.readString();
+        promotionId = in.readString();
+        fare = in.readParcelable(Fare.class.getClassLoader());
+        cabinClass = in.readString();
+        returnfl = in.createTypedArrayList(Returnfl.CREATOR);
+        warnings = in.readString();
+        arrivalTime = in.readString();
+        aircraftType = in.readString();
+        seatingclass = in.readString();
+        operatingcarrier = in.readString();
+        src = in.readString();
+        internationalsearch = in.readString();
+        splitduration = in.readString();
+        availabilityDisplayType = in.readString();
+        searchKey = in.readString();
+        bookingclass = in.readString();
+        airline = in.readString();
+        multicitysearch = in.readString();
+        depdate = in.readString();
+        arrtime = in.readString();
+        arrdate = in.readString();
+        cacheKey = in.readString();
+        travelTime = in.readString();
+    }
+
+    public static final Creator<OnWardFlight> CREATOR = new Creator<OnWardFlight>() {
+        @Override
+        public OnWardFlight createFromParcel(Parcel in) {
+            return new OnWardFlight(in);
+        }
+
+        @Override
+        public OnWardFlight[] newArray(int size) {
+            return new OnWardFlight[size];
+        }
+    };
 
     public String getOrigin() {
         return origin;
@@ -525,4 +594,66 @@ public class OnWardFlight {
     public void setTravelTime(String travelTime) {
         this.travelTime = travelTime;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(origin);
+        if (rating == null) {
+            parcel.writeByte((byte) 0);
+        } else {
+            parcel.writeByte((byte) 1);
+            parcel.writeInt(rating);
+        }
+        parcel.writeString(departureTime);
+        parcel.writeString(flightcode);
+        parcel.writeString(group);
+        parcel.writeString(farebasis);
+        parcel.writeString(depterminal);
+        parcel.writeString(holdflag);
+        parcel.writeString(cINFO);
+        parcel.writeString(deptime);
+        parcel.writeString(codeshare);
+        parcel.writeString(ibibopartner);
+        parcel.writeString(duration);
+        parcel.writeString(platingcarrier);
+        parcel.writeString(qtype);
+        parcel.writeString(arrterminal);
+        parcel.writeString(flightno);
+        parcel.writeString(destination);
+        parcel.writeString(flHash);
+        parcel.writeString(stops);
+        parcel.writeString(seatsavailable);
+        parcel.writeString(carrierid);
+        parcel.writeString(provider);
+        parcel.writeString(refundable);
+        parcel.writeString(promotionId);
+        parcel.writeParcelable(fare, i);
+        parcel.writeString(cabinClass);
+        parcel.writeTypedList(returnfl);
+        parcel.writeString(warnings);
+        parcel.writeString(arrivalTime);
+        parcel.writeString(aircraftType);
+        parcel.writeString(seatingclass);
+        parcel.writeString(operatingcarrier);
+        parcel.writeString(src);
+        parcel.writeString(internationalsearch);
+        parcel.writeString(splitduration);
+        parcel.writeString(availabilityDisplayType);
+        parcel.writeString(searchKey);
+        parcel.writeString(bookingclass);
+        parcel.writeString(airline);
+        parcel.writeString(multicitysearch);
+        parcel.writeString(depdate);
+        parcel.writeString(arrtime);
+        parcel.writeString(arrdate);
+        parcel.writeString(cacheKey);
+        parcel.writeString(travelTime);
+    }
+
+    //end region
 }

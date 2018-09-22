@@ -8,6 +8,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 
+import java.util.List;
+
 import andrekabelim.br.projetomaxmilhas.R;
 import andrekabelim.br.projetomaxmilhas.ui.adapters.AirportAdapter;
 import andrekabelim.br.projetomaxmilhas.ui.adapters.TicketsAdapter;
@@ -15,6 +17,7 @@ import andrekabelim.br.projetomaxmilhas.ui.config.IntentsConfig;
 import andrekabelim.br.projetomaxmilhas.ui.helpers.CodeIATA;
 import andrekabelim.br.projetomaxmilhas.ui.models.Airport;
 import andrekabelim.br.projetomaxmilhas.ui.models.Data;
+import andrekabelim.br.projetomaxmilhas.ui.models.OnWardFlight;
 import andrekabelim.br.projetomaxmilhas.ui.presenter.FligthPresenter;
 import andrekabelim.br.projetomaxmilhas.ui.presenter.FligthPresenterImpl;
 import butterknife.BindView;
@@ -45,7 +48,7 @@ public class FligthActivity extends AppCompatActivity implements FligthView {
 
         Intent intent = getIntent();
 
-        Data dataFlight = intent.getParcelableExtra(IntentsConfig.DATA_TICKETS_KEY);
+        List<OnWardFlight> dataFlight = intent.getParcelableArrayListExtra(IntentsConfig.DATA_TICKETS_KEY);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 

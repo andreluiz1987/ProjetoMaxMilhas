@@ -150,6 +150,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:padding="10dp"
+            android:foreground="?attr/selectableItemBackground"
             android:text="@string/message_find_tickets"
             android:textColor="@color/color1ABC9C"
             android:textSize="16sp" />
